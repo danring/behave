@@ -922,8 +922,9 @@ class ScenarioOutline(Scenario):
                 new_steps = []
                 for step in self.steps:
                     new_steps.append(step.set_values(row))
+                scenario_name = self.name_with_values(row)
                 scenario = Scenario(self.filename, self.line, self.keyword,
-                                    self.name, self.tags, new_steps)
+                                    scenario_name, self.tags, new_steps)
                 scenario.feature = self.feature
                 scenario.background = self.background
                 scenario._row = row
@@ -935,6 +936,12 @@ class ScenarioOutline(Scenario):
 
     def __iter__(self):
         return iter(self.scenarios)
+
+    def name_with_values(self, table_row):
+        scenario_name = self.name
+        for name, value in table_row.items():
+            scenario_name = scenario_name.replace("<%s>" % name, value)
+        return scenario_name
 
     def compute_status(self):
         for scenario in self.scenarios:

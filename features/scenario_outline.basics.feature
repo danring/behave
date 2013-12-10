@@ -98,3 +98,21 @@ Feature: Issue #187 ScenarioOutline uses wrong return value when if fails
       0 features passed, 1 failed, 0 skipped
       2 scenarios passed, 1 failed, 0 skipped
       """
+
+  Scenario: Example fails with parameterized scenario name
+    Given a file named "features/example.scenario_outline_fail_parameterized.feature" with:
+      """
+      Feature:  Scenario Outline failure has parameterized Scenario name
+        Scenario Outline: Outcome is <outcome>
+          Given a step <outcome>
+
+          Examples:
+            | outcome | Comment |
+            | fails   | Example fails |
+      """
+    When I run "behave -f plain features/example.scenario_outline_fail_parameterized.feature"
+    Then it should fail with:
+      """
+      Failing scenarios:
+        features/example.scenario_outline_fail_parameterized.feature:2  Outcome is fails
+      """
